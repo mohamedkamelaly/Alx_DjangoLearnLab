@@ -1,0 +1,1 @@
+Book.objects.create("1984", "George Orwell",1949)

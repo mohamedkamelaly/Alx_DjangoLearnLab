@@ -1,0 +1,1 @@
+book.objects.update(book.title = "Nineteen Eighty-Four")

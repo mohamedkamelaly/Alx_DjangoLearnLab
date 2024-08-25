@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, redirect
 from django import forms
+from .forms import ExampleForm
 # Create your views here.
 def create_Book(request):
     Book.objects.create(title= "1984", author= "George Orwell",publication_year= 1949)
@@ -67,7 +68,3 @@ def my_form_view(request):
     else:
         form = MyForm()
     return render(request, 'form_example.html', {'form': form})
-MIDDLEWARE = [
-    'csp.middleware.CSPMiddleware',
-    # other middlewares
-]

@@ -33,20 +33,20 @@ class CustomUser(AbstractUser):
     profile_photo = models.ImageField(upload_to= 'profile_photo',null=True, blank=True)
     objects = CustomUserManager()
     # Avoid clashes by specifying unique related_names
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='customuser_set',  # Add a unique related_name
-        blank=True,
-        help_text='The groups this user belongs to.',
-        verbose_name='groups',
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='customuser_set',  # Add a unique related_name
-        blank=True,
-        help_text='Specific permissions for this user.',
-        verbose_name='user permissions',
-    )
+#    groups = models.ManyToManyField(
+#        'auth.Group',
+#        related_name='customuser_set',  # Add a unique related_name
+#        blank=True,
+#        help_text='The groups this user belongs to.',
+#        verbose_name='groups',
+#    )
+#    user_permissions = models.ManyToManyField(
+#        'auth.Permission',
+#        related_name='customuser_set',  # Add a unique related_name
+#        blank=True,
+#        help_text='Specific permissions for this user.',
+#        verbose_name='user permissions',
+#    )
 
 
 # Create your models here.

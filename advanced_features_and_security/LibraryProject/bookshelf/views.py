@@ -42,3 +42,6 @@ def delete_view(request, pk):
         instance.delete()
         return redirect('some_view')
     return render(request, 'delete_template.html', {'instance': instance})
+
+
+''' "book_list", "books" ''' 

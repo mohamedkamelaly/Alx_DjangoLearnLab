@@ -54,3 +54,14 @@ class Book(models.Model):
     title = models.CharField(max_length=200,null= False, default= 'Unknown title')
     author = models.CharField(max_length=100, default='Unknown Author')
     publication_year = models.IntegerField(null= False, default=timezone.now())
+
+class CustomPermission(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    class Meta:
+        permissions = [
+            ('can_view', 'Can view model'),
+            ('can_create', 'Can create model'),
+            ('can_edit', 'Can edit model'),
+            ('can_delete', 'Can delete model'),
+        ]

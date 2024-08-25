@@ -3,7 +3,7 @@ from .models import Book, CustomPermission
 from django.utils import timezone
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, redirect
-
+from django import forms
 # Create your views here.
 def create_Book(request):
     Book.objects.create(title= "1984", author= "George Orwell",publication_year= 1949)
@@ -45,3 +45,29 @@ def delete_view(request, pk):
 
 
 ''' "book_list", "books" ''' 
+
+from django.shortcuts import get_object_or_404
+from .models import Book
+
+def my_view(request, id):
+    obj = get_object_or_404(Book, pk=id)
+    return render(request, 'form_example.html', {'object': obj})
+
+class MyForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        fields = ['field1', 'field2']
+
+def my_form_view(request):
+    if request.method == 'POST':
+        form = MyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Handle successful form submission
+    else:
+        form = MyForm()
+    return render(request, 'form_example.html', {'form': form})
+MIDDLEWARE = [
+    'csp.middleware.CSPMiddleware',
+    # other middlewares
+]

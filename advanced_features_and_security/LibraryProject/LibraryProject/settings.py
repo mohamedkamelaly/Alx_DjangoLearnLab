@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-st$lr@ht%$hoaklkwwnuro3do=@7x^8j3ie5k0p!nca0x+5ckb'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -124,3 +124,25 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #AUTH_USER_MODEL = 'relationship_app.CustomUser'
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+# Prevent XSS attacks by enabling the X-XSS-Protection header
+SECURE_BROWSER_XSS_FILTER = True
+
+# Prevent browsers from loading your site in an iframe
+X_FRAME_OPTIONS = 'DENY'
+
+# Prevent the browser from sniffing the MIME type
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Ensure cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
+SECURE_HSTS_SECONDS = 31536000  # Enable HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'https://trusted.cdn.com')
+CSP_IMG_SRC = ("'self'", 'https://trusted.image.cdn.com')

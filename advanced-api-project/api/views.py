@@ -17,6 +17,7 @@ class ListView(generics.ListApiView):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['author', 'publication_year']  # Example: Filter by author or publication year
     search_fields = ['title']  # Example: Search by title
+    ordering_fields = ['title', 'publication_year']
 
 #A DetailView for retrieving a single book by ID.
 class BookDetailView(generics.RetrieveAPIView):

@@ -4,7 +4,7 @@ from .serializers import BookSerializer
 from .models import Book
 from django_filters import rest_framework
 from rest_framework import permissions
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated"
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.exceptions import ValidationError
 from datetime import datetime
 from django_filters.rest_framework import DjangoFilterBackend
@@ -15,7 +15,7 @@ from rest_framework import filters
 class ListView(generics.ListApiView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter,  filters.OrderingFilter]
     filterset_fields = ['author', 'publication_year']  # Example: Filter by author or publication year
     search_fields = ['title']  # Example: Search by title
     ordering_fields = ['title', 'publication_year']

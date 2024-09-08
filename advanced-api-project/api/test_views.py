@@ -11,6 +11,8 @@ class BookAPITestCase(APITestCase):
         # Create a user and authenticate
         self.url = reverse('book-list')
         self.book = Book.objects.create(title = 'GOT', publication_year = 2024)
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.client.login(username='testuser', password='testpass')
     # Create initial book data
     def test_book_list(self):
         response = self.client.get (self.url)

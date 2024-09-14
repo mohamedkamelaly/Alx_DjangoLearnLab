@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import MyUser, Profile, Comment
+from .models import MyUser, Profile, Comment, Post
 
 
 class UserRegisterForm(UserCreationForm):
@@ -25,4 +25,7 @@ class CommentForm(forms.ModelForm):
         if len(content) < 4:
             raise forms.ValidationError("Comment is too short!")
         return content
-   
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'tags']  # Include tags in the form]

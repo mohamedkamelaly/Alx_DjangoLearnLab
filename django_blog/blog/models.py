@@ -3,6 +3,7 @@ from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import  AbstractUser, AbstractBaseUser, UserManager
 from django.utils import timezone
+from taggit.managers import TaggableManager
 # Create your models here.
 class User_Manager(UserManager):
     def create_user(self, username, email, password=None):
@@ -62,6 +63,10 @@ class Post(models.Model):
     published_date =  models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     updated_date = models.DateTimeField(auto_now=True)
+    tags = TaggableManager()  # Use TaggableManager for tags
+
+    def __str__(self):
+        return self.title
 
 
 class Profile(models.Model):
@@ -92,3 +97,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment by {self.author} on {self.post}'
+    
+
+#class Tag(models.Model):
+    #name = models.CharField(max_length=50)
+    #post = models.ManyToManyField(Post, related_name='tags')
+    #def __str__(self):
+        #return self.name
+    

@@ -50,19 +50,20 @@ class PostListView(ListView):
         template_name = 'blog/post_list.html'  # Template for displaying posts
         context_object_name = 'posts'
         ordering = ['-created_at']  # Show latest posts first
+        paginate_by = 10
         def get_queryset(self):
-            queryset = Post.objects.all()  # Make sure this returns all posts
             query = self.request.GET.get('q')  # Get the search query from the form
 
             if query:
-                queryset = queryset.filter(
+                # Use Post.objects.filter directly to filter posts by title, content, or tags
+                return Post.objects.filter(
                     Q(title__icontains=query) |
                     Q(content__icontains=query) |
-                    Q(tags__name__icontains=query)  # Search by tag name
-                ).distinct()  # distinct() prevents duplicate results
-
-            return queryset
-        
+                    Q(tags__name__icontains=query)
+                ).distinct()
+            else:
+                # If no query is provided, return all posts
+                return Post.objects.all()
 
 class PostDetailView(DetailView):
     model = Post

@@ -4,7 +4,7 @@ from django.contrib.auth import login
 from .forms import UserRegisterForm , ProfileForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
-from .models import Post
+from .models import Post, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 
@@ -107,3 +107,38 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author  # Ensure only the author can delete
+    
+
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'  # Create this template
+    context_object_name = 'comment'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user  # Ensure the author remains the same
+        return super().form_valid(form)
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author  # Only allow authors to edit
+    
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'  # Create this template
+    context_object_name = 'comment'
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()  # Redirect to the post detail page
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author  # Only allow authors to delete
+
+# blog/views.py
+
+
+
+    

@@ -64,6 +64,16 @@ class PostListView(ListView):
             else:
                 # If no query is provided, return all posts
                 return Post.objects.all()
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'post_list.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')  # Get the tag slug from the URL
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        return Post.objects.filter(tags__in=[tag])
 
 class PostDetailView(DetailView):
     model = Post

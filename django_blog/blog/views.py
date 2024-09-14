@@ -7,7 +7,7 @@ from django.views.generic import ListView, DetailView, UpdateView, DeleteView, C
 from .models import Post, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-
+from django.db.models import Q
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -51,7 +51,18 @@ class PostListView(ListView):
         context_object_name = 'posts'
         ordering = ['-created_at']  # Show latest posts first
         def get_queryset(self):
-            return Post.objects.all()  # Make sure this returns all posts
+            queryset = Post.objects.all()  # Make sure this returns all posts
+            query = self.request.GET.get('q')  # Get the search query from the form
+
+            if query:
+                queryset = queryset.filter(
+                    Q(title__icontains=query) |
+                    Q(content__icontains=query) |
+                    Q(tags__name__icontains=query)  # Search by tag name
+                ).distinct()  # distinct() prevents duplicate results
+
+            return queryset
+        
 
 class PostDetailView(DetailView):
     model = Post

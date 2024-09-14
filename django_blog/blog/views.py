@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
-from .forms import UserRegisterForm , ProfileForm
+from .forms import UserRegisterForm , ProfileForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 from .models import Post
@@ -57,6 +57,23 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'  # Template for a single post
     context_object_name = 'post'
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = self.object
+            comment.author = request.user
+            comment.save()
+            return redirect('post-detail', pk=self.object.pk)
+        return self.get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CommentForm()
+        context['comments'] = self.object.comments.all()
+        return context
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post

@@ -2,12 +2,23 @@ from django.shortcuts import render
 from .models import Comment , Post
 from .serializers import PostSerializer, CommentSerializer
 from rest_framework import generics, permissions
+from django_filters import rest_framework as filters
+
+class PostFilter(filters.FilterSet):
+    title = filters.CharFilter(lookup_expr='icontains')  # Filter by title
+    content = filters.CharFilter(lookup_expr='icontains')  # Filter by content
+
+    class Meta:
+        model = Post
+        fields = ['title', 'content']
 
 
 class PostListCreateView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = PostFilter
 
     def perform_create(self, serializer):
         # Automatically set the author to the current user

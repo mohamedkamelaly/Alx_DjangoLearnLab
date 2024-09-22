@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from .models import Comment , Post
+from .models import Comment , Post, Like
 from .serializers import PostSerializer, CommentSerializer
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions 
 from django_filters import rest_framework as filters
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 
 class PostFilter(filters.FilterSet):
     title = filters.CharFilter(lookup_expr='icontains')  # Filter by title
@@ -68,6 +71,36 @@ class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         if instance.author != self.request.user:
             raise permissions.PermissionDenied("You do not have permission to delete this comment.")
         instance.delete()
+
+class LikePostView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, post_id):
+        post = Post.objects.get(id=post_id)
+        user = request.user
+
+        # Check if the user has already liked the post
+        if Like.objects.filter(user=user, post=post).exists():
+            return Response({'message': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create a new like entry
+        Like.objects.create(user=user, post=post)
+        return Response({'message': 'Post liked successfully!'}, status=status.HTTP_200_OK)
+
+class UnlikePostView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, post_id):
+        post = Post.objects.get(id=post_id)
+        user = request.user
+
+        # Check if the user has liked the post
+        like = Like.objects.filter(user=user, post=post).first()
+        if like:
+            like.delete()
+            return Response({'message': 'Post unliked successfully!'}, status=status.HTTP_200_OK)
+
+        return Response({'message': 'You have not liked this post yet.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 

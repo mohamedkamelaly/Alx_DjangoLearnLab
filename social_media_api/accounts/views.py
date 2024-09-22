@@ -3,7 +3,7 @@ from .models import CustomUser
 from .serializers import RegisterSerializer , LoginSerializer, FollowSerializer , UnfollowSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
+from rest_framework import status, generics, permissions
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny , IsAuthenticated
@@ -40,19 +40,24 @@ class LoginView(APIView):
         # If the data is invalid, return the validation errors.
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class FollowUserView(APIView):
+class FollowUserView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, user_id):
-        user_to_follow = CustomUser.objects.get(id=user_id)
-        request.user.following.add(user_to_follow)  # Assuming 'following' is the related name
-        return Response({'message': f'You are now following {user_to_follow.username}'})
+    def create(self, request, user_id, *args, **kwargs):
+        try:
+            user_to_follow = CustomUser.objects.get(id=user_id)
+            request.user.following.add(user_to_follow)  # Assuming 'following' is the related name
+            return Response({'message': f'You are now following {user_to_follow.username}'}, status=status.HTTP_201_CREATED)
+        except CustomUser.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
-class UnfollowUserView(APIView):
+class UnfollowUserView(generics.DestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, user_id):
-        user_to_unfollow = CustomUser.objects.get(id=user_id)
-        request.user.following.remove(user_to_unfollow)
-        return Response({'message': f'You have unfollowed {user_to_unfollow.username}'})
-
+    def destroy(self, request, user_id, *args, **kwargs):
+        try:
+            user_to_unfollow = CustomUser.objects.get(id=user_id)
+            request.user.following.remove(user_to_unfollow)
+            return Response({'message': f'You have unfollowed {user_to_unfollow.username}'}, status=status.HTTP_204_NO_CONTENT)
+        except CustomUser.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)

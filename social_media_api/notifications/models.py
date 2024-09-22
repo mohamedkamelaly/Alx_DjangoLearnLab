@@ -2,7 +2,7 @@ from django.db import models
 from accounts.models import CustomUser
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-class Notificiations(models.Model):
+class Notifications(models.Model):
     receipt = models.ForeignKey(CustomUser, on_delete=models.PROTECT,related_name='notifications')
     actor = models.ForeignKey(CustomUser, on_delete=models.PROTECT, related_name='actions')
     verb = models.TextField()

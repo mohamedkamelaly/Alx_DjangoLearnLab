@@ -15,7 +15,7 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Like(models.Model):
-    post = models.ForeignKey(Post)
-    user = models.ForeignKey(CustomUser)
-
+    post = models.ForeignKey(Post, on_delete=models.PROTECT)
+    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
     
+

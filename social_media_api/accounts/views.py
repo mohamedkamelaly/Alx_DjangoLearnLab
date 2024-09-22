@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import CustomUser
-from .serializers import RegisterSerializer , LoginSerializer
+from .serializers import RegisterSerializer , LoginSerializer, FollowSerializer , UnfollowSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -40,4 +40,19 @@ class LoginView(APIView):
         # If the data is invalid, return the validation errors.
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class FollowUserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, user_id):
+        user_to_follow = CustomUser.objects.get(id=user_id)
+        request.user.following.add(user_to_follow)  # Assuming 'following' is the related name
+        return Response({'message': f'You are now following {user_to_follow.username}'})
+
+class UnfollowUserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, user_id):
+        user_to_unfollow = CustomUser.objects.get(id=user_id)
+        request.user.following.remove(user_to_unfollow)
+        return Response({'message': f'You have unfollowed {user_to_unfollow.username}'})
 

@@ -1,0 +1,34 @@
+{% extends 'recipe/base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4" style=" color: #d78585; font-size: 2.5rem; font-weight: bold;">
+        Our Perfect Recipe For {{ object.title }}
+        </h1>
+
+
+        <!-- Loop through recipes and display them -->
+        
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <!-- Recipe Title -->
+                <h2 class="card-title text-primary">{{ object.title }}</h2>
+
+                <!-- Author and Date -->
+                <p class="card-subtitle mb-2 text-muted">
+                    By <strong>{{ object.author }}</strong> | Last updated on {{ object.updated_at | date:"F d, Y" }}
+                </p>
+
+                <!-- Recipe Description -->
+                <p class="card-text">{{ object.description }}</p>
+
+            </div>
+        </div>
+    {% if object.author == user or user.is_staff %}
+    <div class="col-4">
+        <a class="btn btn-outline-info" href="{% url 'recipe-update' object.id %}">Update</a>
+        <a class="btn btn-outline-danger" href="{% url 'recipe-delete' object.id %}">Delete</a>
+    </div> 
+    {% endif %}
+</div>
+{% endblock content %}

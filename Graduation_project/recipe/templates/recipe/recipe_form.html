@@ -1,0 +1,37 @@
+{% extends 'recipe/base.html' %}
+{% load widget_tweaks %}  <!-- Load widget tweaks -->
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-center mb-4">Add a New Recipe</h2>
+            <form method="POST" class="shadow p-4 rounded bg-light">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-3">Recipe Details</legend>
+                    
+                    <!-- Aligning form fields -->
+                    <div class="mb-3">
+                        {{ form.title.label_tag }} <!-- Title label -->
+                        {{ form.title|add_class:"form-control" }} <!-- Full width input -->
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.description.label_tag }} <!-- Description label -->
+                        {{ form.description|add_class:"form-control" }} <!-- Full width textarea -->
+                    </div>
+                    
+                </fieldset>
+
+                <!-- Button styling with spacing -->
+                <div class="form-group py-3">
+                    <button class="btn btn-primary me-2" type="submit">Save</button> <!-- Added margin between buttons -->
+                    <a href="{% url 'recipe-home' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+

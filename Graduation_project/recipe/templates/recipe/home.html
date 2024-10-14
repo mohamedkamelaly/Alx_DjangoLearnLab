@@ -1,0 +1,31 @@
+{% extends 'recipe/base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4" style=" color: #d78585; font-size: 2.5rem; font-weight: bold;">
+        Your Perfect Recipes from your favorite Country
+        </h1>
+
+
+        <!-- Loop through recipes and display them -->
+        {% for recipe in recipes %}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <!-- Recipe Title -->
+                <h2 class="card-title text-primary">{{ recipe.title }}</h2>
+
+                <!-- Author and Date -->
+                <p class="card-subtitle mb-2 text-muted">
+                    By <strong>{{ recipe.author }}</strong> | Last updated on {{ recipe.updated_at | date:"F d, Y" }}
+                </p>
+
+                <!-- Recipe Description -->
+                <p class="card-text">{{ recipe.description }}</p>
+
+                <!-- Action buttons (you can add more functionality later) -->
+                <a href="{% url 'recipe-detail' recipe.pk %}" class="btn btn-success">View Recipe</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
